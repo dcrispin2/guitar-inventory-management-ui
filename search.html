@@ -16,12 +16,12 @@
         input {
             font-size: 40px;
             border: 3px solid rgb(236, 212, 177);
-            float: center;
+            float: right;
         }
 
         button {
             font-size: 40px;
-            float: right;
+            float: center;
         }
 
         .center {
@@ -76,12 +76,38 @@
     <div style="padding-top: 140px"></div>
 
     <div class="center">
+        <label>Serial:</label>
+        <input id="serial" />
+    </div>
+    <div class="center">
+        <label>Price:</label>
+        <input id="price" />
+    </div>
+    <div class="center">
         <label>Builder:</label>
         <input id="builder" />
+    </div>
+    <div class="center">
+        <label>Model:</label>
+        <input id="model" />
+    </div>
+    <div class="center">
+        <label>Type:</label>
+        <input id="type" />
+    </div>
+    <div class="center">
+        <label>Bottom Wood:</label>
+        <input id="bottomwood" />
+    </div>
+    <div class="center">
+        <label>Top Wood:</label>
+        <input id="topwood" />
+    </div>
+    <div class="center">
         <button onclick="search()">Search</button>
-        <br />
+    </div>
 
-        <div style="padding-top: 30px"></div>
+    <div style="padding-top: 30px">
         <table class="center">
             <thead>
                 <tr>
@@ -102,32 +128,46 @@
     </div>
 
     <script>
-       let guitars = [
-        {serialNumber: 1, price: 270.00, builder: "Fender",
-                     model: "Strato", type: "electric", 
-                     backWood: "Maple", topWood: "Maple"},
-        {serialNumber: 2, price: 3000.00, builder: "Gibson",
-                     model: "Modelo", type: "acoustic", 
-                     backWood: "Mahogany", topWood: "Mahogany"},
-        {serialNumber: 3, price: 1.99, builder: "Olson",
-                     model: "Oldson", type: "electric", 
-                     backWood: "Maple", topWood: "Maple"},
-        {serialNumber: 4, price: 2020.11, builder: "Gibson",
-                     model: "Oldson", type: "electric", 
-                     backWood: "Cedar", topWood: "Cedar"},
-        {serialNumber: 5, price: 199.99, builder: "Collings",
-                     model: "The", type: "acoustic", 
-                     backWood: "Sitka", topWood: "Sitka"}
-      ];
+       let guitars = [];
+       let host = "http://localhost:8080";
+      
+      async function getAll() {       
+        return fetch(host + "/findAll")
+        .then(response => response.json())
+        .catch(error => {
+          console.log(error);
+          alert("Something went wrong!");
+          return [];
+        });        
+      }
 
       async function search() {    
 
+        if(guitars.length == 0) {
+            guitars = await getAll();
+           }
+
+        let gSerial = document.getElementById("serial").value;
+        let gPrice = document.getElementById("price").value;
         let gBuilder = document.getElementById("builder").value;
+        let gModel = document.getElementById("model").value;
+        let gType = document.getElementById("type").value;
+        let gBottom = document.getElementById("bottomwood").value;
+        let gTop = document.getElementById("topwood").value;
+        
         let table = document.getElementById("result");
         table.innerHTML = "";
         
         for (let guitar of guitars) {
-          if (!gBuilder || guitar.builder.toLowerCase() == gBuilder.toLowerCase()) {
+          if (
+             (!gSerial || guitar.serialNumber == gSerial) 
+          && (!gPrice || guitar.price == gPrice)
+          && (!gBuilder || guitar.builder.toLowerCase() == gBuilder.toLowerCase())
+          && (!gModel || guitar.model.toLowerCase() == gModel.toLowerCase())
+          && (!gType || guitar.type.toLowerCase() == gType.toLowerCase())
+          && (!gBottom || guitar.backWood.toLowerCase() == gBottom.toLowerCase())
+          && (!gTop || guitar.topWood.toLowerCase() == gTop.toLowerCase())
+          ){
             let row = document.createElement("tr");
             let cell1 = document.createElement("td");
             let serialNumber = document.createTextNode(guitar.serialNumber);
