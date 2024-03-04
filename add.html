@@ -94,36 +94,68 @@
 
       async function addGuitar() {
         let message = "";
+        let valid = true;
+
+        if (document.getElementById("serial").value == "") {
+            alert("Please enter a serial number.");
+            valid = false;
+        }
+        if (document.getElementById("price").value == "") {
+            alert("Please enter a price.");
+            valid = false;
+        }
+        if (document.getElementById("builder").value == "") {
+            alert("Please enter a builder.");
+            valid = false;
+        }
+        if (document.getElementById("model").value == "") {
+            alert("Please enter a model.");
+            valid = false;
+        }
+        if (document.getElementById("type").value == "") {
+            alert("Please enter a type.");
+            valid = false;
+        }
+        if (document.getElementById("backWood").value == "") {
+            alert("Please enter a bottom wood.");
+            valid = false;
+        }
+        if (document.getElementById("topWood").value == "") {
+            alert("Please enter a top wood.");
+            valid = false;
+        }
+
         let guitarSerial = document.getElementById("serial").value;
         let guitarPrice = document.getElementById("price").value;
-        let guitarBuilder = document.getElementById("builder").value;
+        let guitarBuilder = document.getElementById("builder").value.toUpperCase();
         let guitarModel = document.getElementById("model").value;
-        let guitarType = document.getElementById("type").value;
-        let guitarBack = document.getElementById("backWood").value;
-        let guitarFront = document.getElementById("topWood").value;
+        let guitarType = document.getElementById("type").value.toUpperCase();
+        let guitarBack = document.getElementById("backWood").value.toUpperCase();
+        let guitarFront = document.getElementById("topWood").value.toUpperCase();
         
-        
-        let Guitar = {serialNumber: guitarSerial, price: guitarPrice, builder: guitarBuilder,
-                     model: guitarModel, type: guitarType, backwood: guitarBack, frontWood: guitarFront};
-        console.log("You entered:" + JSON.stringify(Guitar));
-        alert("You entered:" + JSON.stringify(Guitar));
-        let request = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(Guitar)
-        };
-        let response = await fetch(host + "/add", request);
-        if(response.status == 200) {
-        if (result) {
-            message = "The Guitar was added successfully!";
-        } else {
-            console.log(response);
-            message = "Something went wrong! Guitar data could not be saved.";
+        if (valid == true){
+
+            let Guitar = {serialNumber: guitarSerial, price: guitarPrice, builder: guitarBuilder,
+                         model: guitarModel, type: guitarType, backWood: guitarBack, topWood: guitarFront};
+            console.log("You entered:" + JSON.stringify(Guitar));
+            alert("You entered:" + JSON.stringify(Guitar));
+            let request = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(Guitar)
+            };
+            let response = await fetch(host + "/add", request);
+            if(response.status == 200) {
+                
+                    message = "The Guitar was added successfully!";
+            } else {
+                console.log(response);
+                message = "Something went wrong! Guitar data could not be saved.";
+            }
+                alert(message);
         }
-        alert(message);
-      }
     }
     </script>
   </body>
